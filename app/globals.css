@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+/* Monochrome system. Light by default, true black in dark. Status is carried by shape and pattern, not hue. */
+:root {
+  --bg: #ffffff;
+  --subtle: #f4f4f4;
+  --line: #e2e2e2;
+  --line-strong: #0a0a0a;
+  --text: #0a0a0a;
+  --muted: #5a5a5a;
+  --ink: #0a0a0a; /* inverse surface */
+  --on-ink: #fafafa;
+  --on-ink-muted: #a8a8a8;
+  --ring: #0a0a0a;
+  --seg-1: #0a0a0a; --seg-1-fg: #ffffff;
+  --seg-2: #3b3b3b; --seg-2-fg: #ffffff;
+  --seg-3: #6e6e6e; --seg-3-fg: #ffffff;
+  --seg-4: #9d9d9d; --seg-4-fg: #0a0a0a;
+  --seg-5: #c8c8c8; --seg-5-fg: #0a0a0a;
+  --seg-6: #e6e6e6; --seg-6-fg: #0a0a0a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --subtle: #121212;
+    --line: #262626;
+    --line-strong: #fafafa;
+    --text: #fafafa;
+    --muted: #a3a3a3;
+    --ink: #fafafa;
+    --on-ink: #0a0a0a;
+    --on-ink-muted: #525252;
+    --ring: #fafafa;
+    --seg-1: #fafafa; --seg-1-fg: #0a0a0a;
+    --seg-2: #c9c9c9; --seg-2-fg: #0a0a0a;
+    --seg-3: #9a9a9a; --seg-3-fg: #0a0a0a;
+    --seg-4: #6b6b6b; --seg-4-fg: #ffffff;
+    --seg-5: #444444; --seg-5-fg: #ffffff;
+    --seg-6: #2c2c2c; --seg-6-fg: #ffffff;
+  }
+}
+
+/* Inverted blocks (hero, working screen) swap the whole palette. */
+.inverse {
+  --bg: var(--ink);
+  --text: var(--on-ink);
+  --muted: var(--on-ink-muted);
+  --line: color-mix(in srgb, var(--on-ink) 22%, transparent);
+  --line-strong: var(--on-ink);
+  --subtle: color-mix(in srgb, var(--on-ink) 8%, transparent);
+  --ring: var(--on-ink);
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Always-black blocks, whatever the system theme. */
+.dark-block {
+  --bg: #000000;
+  --text: #fafafa;
+  --muted: #a3a3a3;
+  --line: rgba(255, 255, 255, 0.22);
+  --line-strong: #fafafa;
+  --subtle: rgba(255, 255, 255, 0.08);
+  --ring: #fafafa;
+  --seg-1: #fafafa; --seg-1-fg: #0a0a0a;
+  --seg-2: #c9c9c9; --seg-2-fg: #0a0a0a;
+  --seg-3: #9a9a9a; --seg-3-fg: #0a0a0a;
+  --seg-4: #6b6b6b; --seg-4-fg: #ffffff;
+  --seg-5: #444444; --seg-5-fg: #ffffff;
+  --seg-6: #2c2c2c; --seg-6-fg: #ffffff;
+  background: var(--bg);
+  color: var(--text);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-subtle: var(--subtle);
+  --color-line: var(--line);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-ink: var(--ink);
+  --color-on-ink: var(--on-ink);
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+html {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+body { min-height: 100dvh; background: var(--bg); font-variant-numeric: tabular-nums; }
+h1, h2, h3 { font-weight: 600; letter-spacing: -0.035em; line-height: 1.02; text-wrap: balance; }
+p { text-wrap: pretty; }
+::selection { background: var(--text); color: var(--bg); }
+
+:focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; border-radius: 6px; }
+button, [role="radio"], summary, a { cursor: pointer; touch-action: manipulation; }
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* Pattern marks "at risk" or "flagged" without relying on colour. */
+.hatch {
+  background-image: repeating-linear-gradient(135deg, var(--text) 0 2px, transparent 2px 7px);
+}
+.hatch-soft {
+  background-image: repeating-linear-gradient(135deg, color-mix(in srgb, var(--text) 35%, transparent) 0 1.5px, transparent 1.5px 6px);
+}
+
+/* Range input, styled to match. */
+input[type="range"] { -webkit-appearance: none; appearance: none; background: transparent; width: 100%; height: 44px; }
+input[type="range"]::-webkit-slider-runnable-track { height: 6px; border-radius: 999px; background: var(--line); }
+input[type="range"]::-moz-range-track { height: 6px; border-radius: 999px; background: var(--line); }
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; margin-top: -11px;
+  width: 28px; height: 28px; border-radius: 999px; background: var(--text); border: 4px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--text);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 20px; height: 20px; border-radius: 999px; background: var(--text); border: 4px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--text);
+}
+
+input[type="number"]::-webkit-inner-spin-button { display: none; }
+input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
