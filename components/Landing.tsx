@@ -64,6 +64,84 @@ function HeroBar() {
   );
 }
 
+/** Decorative mascot: a teddy "counsel" weighing steady revenue against key-man risk. */
+function HeroArt() {
+  const root = useRef<SVGSVGElement>(null);
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const tl = gsap.timeline({ repeat: -1, yoyo: true, defaults: { ease: "sine.inOut", duration: 2.2 } });
+        tl.fromTo(".beam", { rotation: -9, svgOrigin: "200 118" }, { rotation: 9, svgOrigin: "200 118" })
+          .fromTo(".pan-l", { y: 15 }, { y: -15 }, 0)
+          .fromTo(".pan-r", { y: -15 }, { y: 15 }, 0);
+        gsap.to(".bear", { y: -7, duration: 2.6, ease: "sine.inOut", repeat: -1, yoyo: true });
+        gsap
+          .timeline({ repeat: -1, repeatDelay: 3.4 })
+          .to(".eye", { scaleY: 0.1, duration: 0.08 })
+          .to(".eye", { scaleY: 1, duration: 0.08 });
+      });
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set(".beam", { rotation: -6, svgOrigin: "200 118" });
+        gsap.set(".pan-l", { y: 10 });
+        gsap.set(".pan-r", { y: -10 });
+      });
+    },
+    { scope: root },
+  );
+
+  return (
+    <svg ref={root} viewBox="0 0 400 440" className="h-auto w-full max-w-md" aria-hidden="true" focusable="false">
+      {/* courthouse */}
+      <g fill="none" stroke="currentColor" strokeWidth="2" opacity="0.35" strokeLinejoin="round">
+        <polygon points="48,150 200,64 352,150" />
+        <line x1="48" y1="150" x2="352" y2="150" />
+        {[84, 150, 250, 316].map((x) => (
+          <rect key={x} x={x - 12} y="160" width="24" height="190" rx="3" />
+        ))}
+        <rect x="40" y="350" width="320" height="14" rx="3" />
+        <rect x="28" y="364" width="344" height="14" rx="3" />
+        <rect x="16" y="378" width="368" height="14" rx="3" />
+      </g>
+
+      {/* scales */}
+      <g stroke="currentColor" strokeWidth="3" strokeLinecap="round" fill="none">
+        <line x1="200" y1="118" x2="200" y2="216" />
+        <g className="beam">
+          <line x1="104" y1="118" x2="296" y2="118" />
+          <circle cx="200" cy="118" r="7" fill="currentColor" />
+        </g>
+        <g className="pan-l">
+          <line x1="104" y1="118" x2="82" y2="170" strokeWidth="2" />
+          <line x1="104" y1="118" x2="126" y2="170" strokeWidth="2" />
+          <path d="M74 170h60a30 22 0 0 1-60 0z" fill="currentColor" />
+          <text x="104" y="212" textAnchor="middle" fontSize="13" fill="currentColor" stroke="none" fontWeight="500">repeat</text>
+        </g>
+        <g className="pan-r">
+          <line x1="296" y1="118" x2="274" y2="170" strokeWidth="2" />
+          <line x1="296" y1="118" x2="318" y2="170" strokeWidth="2" />
+          <path d="M266 170h60a30 22 0 0 1-60 0z" fill="currentColor" />
+          <text x="296" y="212" textAnchor="middle" fontSize="13" fill="currentColor" stroke="none" fontWeight="500">key-man</text>
+        </g>
+      </g>
+
+      {/* bear in a tie */}
+      <g className="bear">
+        <circle cx="152" cy="238" r="21" fill="currentColor" />
+        <circle cx="248" cy="238" r="21" fill="currentColor" />
+        <circle cx="200" cy="290" r="62" fill="currentColor" />
+        <circle cx="200" cy="262" r="48" fill="currentColor" stroke="var(--bg)" strokeWidth="4" />
+        <circle cx="180" cy="254" r="5" fill="var(--bg)" className="eye" style={{ transformBox: "fill-box", transformOrigin: "center" }} />
+        <circle cx="220" cy="254" r="5" fill="var(--bg)" className="eye" style={{ transformBox: "fill-box", transformOrigin: "center" }} />
+        <ellipse cx="200" cy="274" rx="13" ry="9" fill="var(--bg)" />
+        <ellipse cx="200" cy="270" rx="5" ry="3.4" fill="currentColor" />
+        <polygon points="200,318 188,334 200,386 212,334" fill="var(--bg)" />
+        <polygon points="200,318 191,326 209,326" fill="currentColor" stroke="var(--bg)" strokeWidth="2" />
+      </g>
+    </svg>
+  );
+}
+
 function Hero({ onStart, onSample }: { onStart: () => void; onSample: () => void }) {
   const root = useRef<HTMLElement>(null);
   useGSAP(
@@ -90,11 +168,12 @@ function Hero({ onStart, onSample }: { onStart: () => void; onSample: () => void
             <a href="#problem" className="hover:text-text">The problem</a>
             <a href="#checks" className="hover:text-text">What we check</a>
             <a href="#how" className="hover:text-text">How it works</a>
-            <a href="#faq" className="hover:text-text">Questions</a>
+            <a href="#faq" className="hover:text-text">FAQs</a>
           </nav>
         </header>
 
-        <div className="pt-12 sm:pt-20">
+        <div className="grid items-center gap-10 pt-12 sm:pt-20 lg:grid-cols-[1.2fr_0.8fr]">
+          <div>
           <h1 className="text-[2.75rem] leading-[0.98] sm:text-7xl lg:text-[5.5rem]" aria-label="What is your law firm's back office worth?">
             <span className="block overflow-hidden pb-[0.16em] -mb-[0.1em]"><span className="h-line block">What is your</span></span>
             <span className="block overflow-hidden pb-[0.16em] -mb-[0.1em]"><span className="h-line block">law firm&apos;s back</span></span>
@@ -111,7 +190,11 @@ function Hero({ onStart, onSample }: { onStart: () => void; onSample: () => void
               See it on a made-up firm
             </button>
           </div>
-          <p className="h-fade mt-4 text-sm text-muted">No sign-up. This demo does not save your answers. It runs on free API keys, so it can make mistakes. Bring your own key for better results.</p>
+          <p className="h-fade mt-4 max-w-xl text-sm text-muted">No sign-up. This demo does not save your answers. It runs on free API keys, so it can make mistakes. Bring your own key for better results.</p>
+          </div>
+          <div className="h-fade hidden justify-center lg:flex">
+            <HeroArt />
+          </div>
         </div>
 
         <div className="h-fade">
@@ -338,9 +421,21 @@ export function Landing({ onStart, onSample }: { onStart: () => void; onSample: 
           </button>
         </div>
       </section>
-      <footer className="mx-auto max-w-6xl px-5 py-10 text-sm text-muted sm:px-8">
+      <footer className="mx-auto max-w-6xl space-y-4 px-5 py-10 text-sm text-muted sm:px-8">
         <p className="max-w-prose">
           Concept art visualising Teddy AI&apos;s idea. An independent concept, not affiliated with or endorsed by Teddy, and we hold no rights to Teddy&apos;s name, brand or work. Sample firms are made up. Output is indicative and is not investment, legal or tax advice.
+        </p>
+        <p>
+          Credits: the idea is Teddy AI&apos;s.{" "}
+          <a href="https://www.teddyholdings.ai/" target="_blank" rel="noopener noreferrer" className="font-medium text-text underline underline-offset-2">
+            teddyholdings.ai
+          </a>
+        </p>
+        <p>
+          Built by Ritesh in an evening ·{" "}
+          <a href="https://riteshh.in" target="_blank" rel="noopener noreferrer" className="font-medium text-text underline underline-offset-2">
+            riteshh.in
+          </a>
         </p>
       </footer>
     </>
